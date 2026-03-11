@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: tontine-digital-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tontine-db
+          property: connectionString
+      - key: ADMIN_WAVE_NUMBER
+        value: "0747429889"
+      - key: ADMIN_ORANGE_NUMBER
+        value: "0555471974"
+      - key: ADMIN_MTN_NUMBER
+        value: "0747429889"
+      - key: SERVICE_FEE_PERCENTAGE
+        value: "0.02"
+
+databases:
+  - name: tontine-db
+    databaseName: tontine_digital
+    user: tontine_user
+    plan: free
