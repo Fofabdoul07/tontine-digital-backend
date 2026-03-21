@@ -23,7 +23,20 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 
 db  = SQLAlchemy(app)
 jwt = JWTManager(app)
-CORS(app)   # Autorise les appels depuis l'application React
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["*"],
+        "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH')
+    return response
 
 # ─── MODÈLES (Tables de la base de données) ──────────────────────────────────
 
